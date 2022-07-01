@@ -108,11 +108,22 @@ router.get("/readTwo", (req, res) => __awaiter(void 0, void 0, void 0, function*
             .pipe(new node_stream_2.Transform({
             objectMode: true,
             transform(chunk, enc, cb) {
-                console.log(chunk.toString(), ",,,,,,,,,,,,,,,,,,");
-                return cb();
+                // console.log(chunk.toString(), ",,,,,,,,,,,,,,,,,,");
+                cb(null, chunk);
             },
         }))
-            .pipe(writeStream);
+            // .pipe(writeStream);
+            .pipe(new node_stream_2.Writable({
+            objectMode: true,
+            write(chunk, enc, cb) {
+                console.log(chunk.toString(), "jjjjj");
+                const writeStream = fs_1.default.createWriteStream(`.././Node_Streams_New/final.json`, {
+                    flags: "a",
+                });
+                writeStream.write(chunk);
+                return cb();
+            },
+        }));
     }
     catch (error) {
         console.log(error);
